@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">id.world.test</string>
+    <string name="latitube_longitube">Широта: %1$s, Долгота: %2$s</string>
+    <string name="error_request">request error</string>
 </resources>

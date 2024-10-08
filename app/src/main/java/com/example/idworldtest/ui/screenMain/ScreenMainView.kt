@@ -4,6 +4,8 @@ import androidx.compose.ui.graphics.Color
 
 interface ScreenMainView {
     data class Model(
+        val latitude: String = "",
+        val longitude: String = "",
         val operatorText: String = "",
         val operatorColor: Color? = null,
     )

@@ -13,8 +13,10 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.idworldtest.R
 import kotlinx.coroutines.launch
 
 @Composable
@@ -32,6 +34,15 @@ fun ScreenMain(modifier: Modifier = Modifier) {
             Text(
                 color = uiState.operatorColor ?: Color.Red,
                 text = uiState.operatorText,
+                modifier = Modifier.padding(8.dp)
+            )
+            Text(
+                color = uiState.operatorColor ?: Color.Red,
+                text = stringResource(
+                    R.string.latitube_longitube,
+                    uiState.latitude,
+                    uiState.longitude
+                ),
                 modifier = Modifier.padding(8.dp)
             )
         }
