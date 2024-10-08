@@ -3,12 +3,16 @@ package com.example.idworldtest.di
 import android.app.Application
 import android.content.Context
 import com.example.idworldtest.data.repository.ClientResourceProviderImpl
+import com.example.idworldtest.data.repository.LocationRepositoryImpl
 import com.example.idworldtest.data.repository.MobileServicesRepositoryImpl
+import com.example.idworldtest.data.source.GmsLocationDataSource
+import com.example.idworldtest.data.source.HmsLocationDataSource
 import com.example.idworldtest.data.source.availabillity.EmuiDataSource
 import com.example.idworldtest.data.source.availabillity.GoogleServicesAvailabilityDataSource
 import com.example.idworldtest.data.source.availabillity.HuaweiServicesAvailabilityDataSource
 import com.example.idworldtest.data.source.availabillity.MobileServicesAvailabilityDataSource
 import com.example.idworldtest.domain.ClientResourceProvider
+import com.example.idworldtest.domain.LocationRepository
 import com.example.idworldtest.domain.MobileServicesRepository
 import com.example.idworldtest.domain.SelectMobileServiceType
 import com.google.android.gms.common.GoogleApiAvailability
@@ -33,7 +37,14 @@ object AppModule {
     @Provides
     @Singleton
     fun provideClientResourceProvider(clientResourceProviderImpl: ClientResourceProviderImpl):ClientResourceProvider=clientResourceProviderImpl
-
+    @Provides
+    @Singleton
+    fun provideLocationRepository(
+        hmsLocationDataSource: HmsLocationDataSource,
+        gmsLocationDataSource: GmsLocationDataSource
+    ): LocationRepository {
+        return LocationRepositoryImpl(hmsLocationDataSource, gmsLocationDataSource)
+    }
 
     @Provides
     @Singleton
@@ -64,6 +75,13 @@ object AppModule {
         return LocationServices.getFusedLocationProviderClient(context)
     }
 
+    @Provides
+    @Singleton
+    fun provideHmsLocationDataSource(
+        fusedLocationProviderClient: com.huawei.hms.location.FusedLocationProviderClient
+    ): HmsLocationDataSource {
+        return HmsLocationDataSource(fusedLocationProviderClient)
+    }
 
     @Provides
     @Singleton
@@ -86,6 +104,13 @@ object AppModule {
         return com.huawei.hms.location.LocationServices.getFusedLocationProviderClient(context)
     }
 
+    @Provides
+    @Singleton
+    fun provideGmsLocationDataSource(
+        fusedLocationProviderClient: FusedLocationProviderClient
+    ): GmsLocationDataSource {
+        return GmsLocationDataSource(fusedLocationProviderClient)
+    }
 
     @Provides
     @Singleton

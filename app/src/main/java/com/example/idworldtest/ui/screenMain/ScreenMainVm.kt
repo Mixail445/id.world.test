@@ -3,6 +3,7 @@ package com.example.idworldtest.ui.screenMain
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.example.idworldtest.domain.ClientResourceProvider
+import com.example.idworldtest.domain.LocationRepository
 import com.example.idworldtest.domain.SelectMobileServiceType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -15,6 +16,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ScreenMainVm @Inject constructor(
+    private val repository: LocationRepository,
     private val mobRep: SelectMobileServiceType,
     private val clientResourceProvider: ClientResourceProvider
 ) : ViewModel() {
@@ -23,17 +25,28 @@ class ScreenMainVm @Inject constructor(
 
 
     suspend fun getData() {
-        _uiState.update {
-            it.copy(
-                operatorText = clientResourceProvider.getClientName(),
-                operatorColor = clientResourceProvider.getClientColor()
-            )
-        }
+        _uiState.update { it.copy(
+            operatorText = clientResourceProvider.getClientName(),
+            operatorColor = clientResourceProvider.getClientColor()
+        ) }
         withContext(Dispatchers.IO) {
-            mobRep(SelectMobileServiceType.Case.Location).onSuccess { serviceT ->
-                Log.d("ServiceT", serviceT.toString())
+            mobRep(SelectMobileServiceType.Case.Location).onSuccess {serviceT->
+                repository.getLastLocation(serviceT).onSuccess { response ->
+
+                    _uiState.update {
+                        it.copy(
+                            latitude = response?.latitude.toString(),
+                            longitude = response?.longitude.toString()
+                        )
+                    }
+                }.onFailure {
+                    _uiState.update {
+                        it.copy(
+                            latitude = "error"
+                        )
+                    }
+                }
             }
         }
-
     }
 }
