@@ -129,10 +129,11 @@ android {
 
 dependencies {
 
+    implementation(libs.location)
+    implementation(libs.play.services.location)
     implementation(libs.hilt.android)
     implementation(libs.androidx.hilt.navigation.compose)
     kapt(libs.hilt.compiler)
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
